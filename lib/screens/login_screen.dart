@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_catalog/utils/routes.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String name = '';
+  bool changeButton = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -19,9 +26,10 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Welcome',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Text(
+                  'Welcome $name',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 Padding(
                   padding:
@@ -32,6 +40,10 @@ class LoginScreen extends StatelessWidget {
                         decoration: const InputDecoration(
                             hintText: 'Enter username',
                             label: Text('Username')),
+                        onChanged: (value) {
+                          name = value;
+                          setState(() {});
+                        },
                       ),
                       TextFormField(
                         obscureText: true,
@@ -42,15 +54,47 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(
                         height: 40,
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, MyRoutes.homeRoute);
+                      InkWell(
+                        onTap: () async {
+                          setState(() {
+                            changeButton = !changeButton;
+                          });
+                          await Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.pushNamed(context, MyRoutes.homeRoute);
+                          });
                         },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(150, 40),
+                        child: AnimatedContainer(
+                          duration: const Duration(seconds: 1),
+                          height: 50,
+                          width: changeButton ? 50 : 150,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(changeButton ? 50 : 8),
+                              color: Colors.deepPurple),
+                          child: changeButton
+                              ? const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
                         ),
-                        child: const Text('Login'),
                       )
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     Navigator.pushNamed(context, MyRoutes.homeRoute);
+                      //   },
+                      //   style: ElevatedButton.styleFrom(
+                      //     minimumSize: const Size(150, 40),
+                      //   ),
+                      //   child: const Text('Login'),
+                      // )
                     ],
                   ),
                 )
